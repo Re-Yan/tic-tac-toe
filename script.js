@@ -1,56 +1,73 @@
 "strict mode";
 let chosenSide;
+let spaces = [null, null, null, null, null, null, null, null, null];
 
 // DOM elements
-const item1 = document.querySelector(".grid-item-1");
-const item2 = document.querySelector(".grid-item-2");
-const item3 = document.querySelector(".grid-item-3");
-const item4 = document.querySelector(".grid-item-4");
-const item5 = document.querySelector(".grid-item-5");
-const item6 = document.querySelector(".grid-item-6");
-const item7 = document.querySelector(".grid-item-7");
-const item8 = document.querySelector(".grid-item-8");
-const item9 = document.querySelector(".grid-item-9");
+const grids = Array.from(document.getElementsByClassName("grid"));
 const modal = document.querySelector(".modal");
+const resultModal = document.querySelector(".results");
+const resultText = document.getElementById("result-text");
 const buttonX = document.getElementById("buttonX");
 const buttonO = document.getElementById("buttonO");
 
+// Function Declarations
+const winCondition = () => {
+  //Game Logic
+  if (spaces[0] === chosenSide) {
+    if (spaces[1] === chosenSide && spaces[2] === chosenSide) {
+      return true;
+    }
+    if (spaces[3] === chosenSide && spaces[6] === chosenSide) {
+      return true;
+    }
+    if (spaces[4] === chosenSide && spaces[8] === chosenSide) {
+      return true;
+    }
+  }
+
+  if (spaces[8] === chosenSide) {
+    if (spaces[4] === chosenSide && spaces[0] === chosenSide) {
+      return true;
+    }
+    if (spaces[7] === chosenSide && spaces[6] === chosenSide) {
+      return true;
+    }
+    if (spaces[5] === chosenSide && spaces[2] === chosenSide) {
+      return true;
+    }
+  }
+
+  if (spaces[4] === chosenSide) {
+    if (spaces[1] === chosenSide && spaces[7] === chosenSide) {
+      return true;
+    }
+    if (spaces[3] === chosenSide && spaces[5] === chosenSide) {
+      return true;
+    }
+  }
+};
+
+const gridClicked = (Event) => {
+  const id = Event.target.id;
+  console.log(`box ${id}`);
+  if (!spaces[id]) {
+    spaces[id] = chosenSide;
+    Event.target.innerText = chosenSide;
+    if (winCondition()) {
+      resultModal.classList.remove("hidden");
+      resultText.textContent = `${chosenSide} Wins!`;
+      console.log(`${chosenSide} wins!`);
+      return;
+    }
+    playerCounter =
+      chosenSide === "X" ? (chosenSide = "O") : (chosenSide = "X");
+  }
+};
+
 // CLICK Events
-item1.addEventListener("click", () => {
-  item1.textContent = `${chosenSide}`;
-});
-
-item2.addEventListener("click", () => {
-  item2.textContent = `${chosenSide}`;
-});
-
-item3.addEventListener("click", () => {
-  item3.textContent = `${chosenSide}`;
-});
-
-item4.addEventListener("click", () => {
-  item4.textContent = `${chosenSide}`;
-});
-
-item5.addEventListener("click", () => {
-  item5.textContent = `${chosenSide}`;
-});
-
-item6.addEventListener("click", () => {
-  item6.textContent = `${chosenSide}`;
-});
-
-item7.addEventListener("click", () => {
-  item7.textContent = `${chosenSide}`;
-});
-
-item8.addEventListener("click", () => {
-  item8.textContent = `${chosenSide}`;
-});
-
-item9.addEventListener("click", () => {
-  item9.textContent = `${chosenSide}`;
-});
+for (let i = 0; i < grids.length; i++) {
+  grids[i].addEventListener("click", gridClicked);
+}
 
 buttonX.addEventListener("click", () => {
   chosenSide = "X";
